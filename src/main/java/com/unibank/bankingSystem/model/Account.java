@@ -24,7 +24,7 @@ public class Account {
     private String accountNumber;
 
     @Column(nullable = false)
-    private BigDecimal amount;
+    private BigDecimal balance;
 
     @OneToMany(mappedBy = "account")
     private List<Transaction> transactions;
@@ -32,4 +32,8 @@ public class Account {
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private AccountType type;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private AccountStatus status;
 }
