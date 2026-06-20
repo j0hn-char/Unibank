@@ -81,7 +81,7 @@ public class AccountService {
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
         User user = userRepository.findByEmail(email).orElseThrow();
 
-        return accountRepository.findAccountsByOwner(user)
+        return accountRepository.findByOwner(user)
                 .stream()
                 .map(account -> new AccountResponse(
                         account.getId(),

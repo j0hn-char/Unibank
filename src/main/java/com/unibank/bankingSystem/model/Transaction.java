@@ -24,6 +24,9 @@ public class Transaction {
     private BigDecimal amount;
 
     @Column(nullable = false)
+    private BigDecimal balanceAfter;
+
+    @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private TransType type;
 

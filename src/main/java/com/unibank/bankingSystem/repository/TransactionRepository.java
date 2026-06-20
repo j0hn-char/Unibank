@@ -10,5 +10,5 @@ import java.util.List;
 
 public interface TransactionRepository extends JpaRepository<Transaction, Long> {
 
-    Page<Transaction> findTransactionsByAccount(Account account, Pageable pageable);
+    Page<Transaction> findByAccountOrderByCreatedAtDesc(Account account, Pageable pageable);
 }

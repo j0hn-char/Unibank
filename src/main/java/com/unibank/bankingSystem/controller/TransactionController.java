@@ -1,0 +1,38 @@
+package com.unibank.bankingSystem.controller;
+
+import com.unibank.bankingSystem.dto.TransactionRequest;
+import com.unibank.bankingSystem.dto.TransactionResponse;
+import com.unibank.bankingSystem.dto.TransferRequest;
+import com.unibank.bankingSystem.service.TransactionService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.web.bind.annotation.*;
+
+@RestController
+@RequestMapping("/api/transactions")
+@RequiredArgsConstructor
+public class TransactionController {
+
+    private final TransactionService transactionService;
+
+    @PostMapping("/deposit")
+    public TransactionResponse deposit(@RequestBody TransactionRequest request) {
+        return transactionService.deposit(request);
+    }
+
+    @PostMapping("/withdraw")
+    public TransactionResponse withdraw(@RequestBody TransactionRequest request) {
+        return transactionService.withdraw(request);
+    }
+
+    @PostMapping("/transfer")
+    public TransactionResponse transfer(@RequestBody TransferRequest request) {
+        return transactionService.transfer(request);
+    }
+
+    @GetMapping("/account/{accountId}")
+    public Page<TransactionResponse> getHistory(@PathVariable Long accountId, Pageable pageable) {
+        return transactionService.getTransactionHistory(accountId, pageable);
+    }
+}
