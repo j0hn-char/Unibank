@@ -3,6 +3,8 @@ package com.unibank.bankingSystem.service;
 import com.unibank.bankingSystem.dto.AuthResponse;
 import com.unibank.bankingSystem.dto.LoginRequest;
 import com.unibank.bankingSystem.dto.RegisterRequest;
+import com.unibank.bankingSystem.exception.DuplicateResourceException;
+import com.unibank.bankingSystem.exception.ResourceNotFoundException;
 import com.unibank.bankingSystem.model.Role;
 import com.unibank.bankingSystem.model.User;
 import com.unibank.bankingSystem.repository.UserRepository;
@@ -24,11 +26,11 @@ public class AuthService {
 
     public AuthResponse register(RegisterRequest request) {
         if(userRepository.existsByEmail(request.getEmail())) {
-            throw new RuntimeException("Email already in use");
+            throw new DuplicateResourceException("Email already in use");
         }
 
         if(userRepository.existsByUsername(request.getUsername())) {
-            throw new RuntimeException("Username already in use");
+            throw new DuplicateResourceException("Username already in use");
         }
 
         User user = new User();
@@ -52,7 +54,7 @@ public class AuthService {
         );
 
         User user = userRepository.findByEmail(request.getEmail())
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
 
         return new AuthResponse(jwtService.generateToken(user));
     }

@@ -3,6 +3,9 @@ package com.unibank.bankingSystem.service;
 import com.unibank.bankingSystem.dto.TransactionRequest;
 import com.unibank.bankingSystem.dto.TransactionResponse;
 import com.unibank.bankingSystem.dto.TransferRequest;
+import com.unibank.bankingSystem.exception.InsufficientFundsException;
+import com.unibank.bankingSystem.exception.ResourceNotFoundException;
+import com.unibank.bankingSystem.exception.UnauthorizedException;
 import com.unibank.bankingSystem.model.Account;
 import com.unibank.bankingSystem.model.TransType;
 import com.unibank.bankingSystem.model.Transaction;
@@ -17,8 +20,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-
 @Service
 @RequiredArgsConstructor
 public class TransactionService {
@@ -29,11 +30,15 @@ public class TransactionService {
 
     public TransactionResponse deposit(TransactionRequest request) {
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
-        User user = userRepository.findByEmail(email).orElseThrow();
+        User user = userRepository.findByEmail(email).orElseThrow(
+                () -> new ResourceNotFoundException("User not found")
+        );
 
-        Account account = accountRepository.findById(request.getAccountId()).orElseThrow();
+        Account account = accountRepository.findById(request.getAccountId()).orElseThrow(
+                () -> new ResourceNotFoundException("Account not found")
+        );
         if (!account.getOwner().getId().equals(user.getId())) {
-            throw new RuntimeException("Unauthorized");
+            throw new UnauthorizedException("You do not own this account");
         }
 
         account.setBalance(account.getBalance().add(request.getAmount()));
@@ -60,15 +65,19 @@ public class TransactionService {
 
     public TransactionResponse withdraw(TransactionRequest request) {
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
-        User user = userRepository.findByEmail(email).orElseThrow();
+        User user = userRepository.findByEmail(email).orElseThrow(
+                () -> new ResourceNotFoundException("User not found")
+        );
 
-        Account account = accountRepository.findById(request.getAccountId()).orElseThrow();
+        Account account = accountRepository.findById(request.getAccountId()).orElseThrow(
+                () -> new ResourceNotFoundException("Account not found")
+        );
         if (!account.getOwner().getId().equals(user.getId())) {
-            throw new RuntimeException("Unauthorized");
+            throw new UnauthorizedException("You do not own this account");
         }
 
         if(account.getBalance().compareTo(request.getAmount()) < 0) {
-            throw new RuntimeException("Insufficient funds");
+            throw new InsufficientFundsException("Insufficient funds");
         }
 
         account.setBalance(account.getBalance().subtract(request.getAmount()));
@@ -97,18 +106,24 @@ public class TransactionService {
     @Transactional
     public TransactionResponse transfer(TransferRequest request) {
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
-        User user = userRepository.findByEmail(email).orElseThrow();
+        User user = userRepository.findByEmail(email).orElseThrow(
+                () -> new ResourceNotFoundException("User not found")
+        );
 
-        Account fromAccount = accountRepository.findById(request.getFromAccountId()).orElseThrow();
+        Account fromAccount = accountRepository.findById(request.getFromAccountId()).orElseThrow(
+                () -> new ResourceNotFoundException("Account not found")
+        );
         if (!fromAccount.getOwner().getId().equals(user.getId())) {
-            throw new RuntimeException("Unauthorized");
+            throw new UnauthorizedException("You do not own this account");
         }
 
         if(fromAccount.getBalance().compareTo(request.getAmount()) < 0) {
-            throw new RuntimeException("Insufficient funds");
+            throw new InsufficientFundsException("Insufficient funds");
         }
 
-        Account toAccount = accountRepository.findById(request.getToAccountId()).orElseThrow();
+        Account toAccount = accountRepository.findById(request.getToAccountId()).orElseThrow(
+                () -> new ResourceNotFoundException("Account not found")
+        );
 
         fromAccount.setBalance(fromAccount.getBalance().subtract(request.getAmount()));
         toAccount.setBalance(toAccount.getBalance().add(request.getAmount()));
@@ -145,11 +160,13 @@ public class TransactionService {
 
     public Page<TransactionResponse> getTransactionHistory(Long accountId, Pageable pageable) {
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
-        User user = userRepository.findByEmail(email).orElseThrow();
+        User user = userRepository.findByEmail(email).orElseThrow(
+                () -> new ResourceNotFoundException("User not found")
+        );
 
         Account account = accountRepository.findById(accountId).orElseThrow();
         if (!account.getOwner().getId().equals(user.getId())) {
-            throw new RuntimeException("Unauthorized");
+            throw new UnauthorizedException("You do not own this account");
         }
         Page<Transaction> transactions = transactionRepository.findByAccountOrderByCreatedAtDesc(account, pageable);
 

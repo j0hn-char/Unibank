@@ -3,6 +3,9 @@ package com.unibank.bankingSystem.service;
 import com.unibank.bankingSystem.dto.LoanRepaymentRequest;
 import com.unibank.bankingSystem.dto.LoanRequest;
 import com.unibank.bankingSystem.dto.LoanResponse;
+import com.unibank.bankingSystem.exception.InsufficientFundsException;
+import com.unibank.bankingSystem.exception.ResourceNotFoundException;
+import com.unibank.bankingSystem.exception.UnauthorizedException;
 import com.unibank.bankingSystem.model.*;
 import com.unibank.bankingSystem.repository.AccountRepository;
 import com.unibank.bankingSystem.repository.LoanRepository;
@@ -28,11 +31,15 @@ public class LoanService {
 
     public LoanResponse applyForLoan(LoanRequest request) {
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
-        User user = userRepository.findByEmail(email).orElseThrow();
+        User user = userRepository.findByEmail(email).orElseThrow(
+                () -> new ResourceNotFoundException("User not found")
+        );
 
-        Account account = accountRepository.findById(request.getAccountId()).orElseThrow();
+        Account account = accountRepository.findById(request.getAccountId()).orElseThrow(
+                () -> new ResourceNotFoundException("Account not found")
+        );
         if(!account.getOwner().getId().equals(user.getId())) {
-            throw new RuntimeException("Unauthorized");
+            throw new UnauthorizedException("You do not own this account");
         }
 
         BigDecimal interestRate = BigDecimal.valueOf(5.0);
@@ -70,16 +77,20 @@ public class LoanService {
 
     public LoanResponse approveLoan(Long loanId) {
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
-        User user = userRepository.findByEmail(email).orElseThrow();
+        User user = userRepository.findByEmail(email).orElseThrow(
+                () -> new ResourceNotFoundException("User not found")
+        );
 
         if(user.getRole() != Role.ADMIN) {
-            throw new RuntimeException("Not admin");
+            throw new UnauthorizedException("You are not an admin");
         }
 
-        Loan loan = loanRepository.findById(loanId).orElseThrow();
+        Loan loan = loanRepository.findById(loanId).orElseThrow(
+                () -> new ResourceNotFoundException("Loan not found")
+        );
 
         if(loan.getStatus() != LoanStatus.PENDING) {
-            throw new RuntimeException("Can't approve loan");
+            throw new RuntimeException("Can not approve loan");
         }
 
         loan.setStatus(LoanStatus.ACTIVE);
@@ -112,13 +123,17 @@ public class LoanService {
 
     public LoanResponse rejectLoan(Long loanId) {
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
-        User user = userRepository.findByEmail(email).orElseThrow();
+        User user = userRepository.findByEmail(email).orElseThrow(
+                () -> new ResourceNotFoundException("User not found")
+        );
 
         if(user.getRole() != Role.ADMIN) {
-            throw new RuntimeException("Not admin");
+            throw new UnauthorizedException("You are not an admin");
         }
 
-        Loan loan = loanRepository.findById(loanId).orElseThrow();
+        Loan loan = loanRepository.findById(loanId).orElseThrow(
+                () -> new ResourceNotFoundException("Loan not found")
+        );
 
         if(loan.getStatus() != LoanStatus.PENDING) {
             throw new RuntimeException("Can't reject loan");
@@ -142,7 +157,9 @@ public class LoanService {
     }
 
     public LoanResponse repayLoan(Long loanId, LoanRepaymentRequest request) {
-        Loan loan = loanRepository.findById(loanId).orElseThrow();
+        Loan loan = loanRepository.findById(loanId).orElseThrow(
+                () -> new ResourceNotFoundException("Loan not found")
+        );
         Account account = loan.getAccount();
 
         if(loan.getStatus() == LoanStatus.PAID_OFF) {
@@ -150,7 +167,7 @@ public class LoanService {
         }
 
         if(account.getBalance().compareTo(request.getAmount()) < 0) {
-            throw new RuntimeException("Insufficient funds");
+            throw new InsufficientFundsException("Insufficient funds");
         }
 
         loan.setRemainingAmount(loan.getRemainingAmount().subtract(request.getAmount()));
@@ -185,7 +202,9 @@ public class LoanService {
 
     public List<LoanResponse> getUserLoans() {
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
-        User user = userRepository.findByEmail(email).orElseThrow();
+        User user = userRepository.findByEmail(email).orElseThrow(
+                () -> new ResourceNotFoundException("User not found")
+        );
 
         List<Loan> loans = loanRepository.findByBorrower(user);
 

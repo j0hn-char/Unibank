@@ -2,6 +2,8 @@ package com.unibank.bankingSystem.service;
 
 import com.unibank.bankingSystem.dto.AccountRequest;
 import com.unibank.bankingSystem.dto.AccountResponse;
+import com.unibank.bankingSystem.exception.ResourceNotFoundException;
+import com.unibank.bankingSystem.exception.UnauthorizedException;
 import com.unibank.bankingSystem.model.Account;
 import com.unibank.bankingSystem.model.AccountStatus;
 import com.unibank.bankingSystem.model.User;
@@ -24,7 +26,9 @@ public class AccountService {
     public AccountResponse openAccount(AccountRequest request) {
 
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
-        User user = userRepository.findByEmail(email).orElseThrow();
+        User user = userRepository.findByEmail(email).orElseThrow(
+                () -> new ResourceNotFoundException("User not found")
+        );
 
         String accountNumber;
         do {
@@ -52,12 +56,16 @@ public class AccountService {
     public AccountResponse closeAccount(Long accountId) {
 
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
-        User user = userRepository.findByEmail(email).orElseThrow();
+        User user = userRepository.findByEmail(email).orElseThrow(
+                () -> new ResourceNotFoundException("User not found")
+        );
 
-        Account account = accountRepository.findById(accountId).orElseThrow();
+        Account account = accountRepository.findById(accountId).orElseThrow(
+                () -> new ResourceNotFoundException("Account not found")
+        );
 
         if (!account.getOwner().getId().equals(user.getId())) {
-            throw new RuntimeException("Unauthorized");
+            throw new UnauthorizedException("You do not own this account");
         }
 
         if (account.getBalance().compareTo(BigDecimal.ZERO) != 0) {
@@ -79,7 +87,9 @@ public class AccountService {
     public List<AccountResponse> getUserAccounts() {
 
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
-        User user = userRepository.findByEmail(email).orElseThrow();
+        User user = userRepository.findByEmail(email).orElseThrow(
+                () -> new ResourceNotFoundException("User not found")
+        );
 
         return accountRepository.findByOwner(user)
                 .stream()
@@ -95,12 +105,16 @@ public class AccountService {
 
     public AccountResponse getUserAccount(Long accountId) {
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
-        User user = userRepository.findByEmail(email).orElseThrow();
+        User user = userRepository.findByEmail(email).orElseThrow(
+                () -> new ResourceNotFoundException("User not found")
+        );
 
-        Account account = accountRepository.findById(accountId).orElseThrow();
+        Account account = accountRepository.findById(accountId).orElseThrow(
+                () -> new ResourceNotFoundException("Account not found")
+        );
 
         if (!account.getOwner().getId().equals(user.getId())) {
-            throw new RuntimeException("Unauthorized");
+            throw new UnauthorizedException("You do not own this account");
         }
 
         return new AccountResponse(
