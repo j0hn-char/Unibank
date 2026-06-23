@@ -1,4 +1,4 @@
-# UniBank 🏦
+# UniBank
 
 A RESTful banking system built with **Spring Boot 3**, featuring JWT-based authentication, account management, and transaction handling.
 
