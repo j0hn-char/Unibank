@@ -3,6 +3,7 @@ package com.unibank.bankingSystem.service;
 import com.unibank.bankingSystem.dto.LoanRepaymentRequest;
 import com.unibank.bankingSystem.dto.LoanRequest;
 import com.unibank.bankingSystem.dto.LoanResponse;
+import com.unibank.bankingSystem.exception.BadRequestException;
 import com.unibank.bankingSystem.exception.InsufficientFundsException;
 import com.unibank.bankingSystem.exception.ResourceNotFoundException;
 import com.unibank.bankingSystem.exception.UnauthorizedException;
@@ -90,7 +91,7 @@ public class LoanService {
         );
 
         if(loan.getStatus() != LoanStatus.PENDING) {
-            throw new RuntimeException("Can not approve loan");
+            throw new BadRequestException("Can not approve loan");
         }
 
         loan.setStatus(LoanStatus.ACTIVE);
@@ -136,7 +137,7 @@ public class LoanService {
         );
 
         if(loan.getStatus() != LoanStatus.PENDING) {
-            throw new RuntimeException("Can't reject loan");
+            throw new BadRequestException("Can't reject loan");
         }
 
         loan.setStatus(LoanStatus.REJECTED);
@@ -163,7 +164,7 @@ public class LoanService {
         Account account = loan.getAccount();
 
         if(loan.getStatus() == LoanStatus.PAID_OFF) {
-            throw new RuntimeException("Loan already paid off");
+            throw new BadRequestException("Loan already paid off");
         }
 
         if(account.getBalance().compareTo(request.getAmount()) < 0) {

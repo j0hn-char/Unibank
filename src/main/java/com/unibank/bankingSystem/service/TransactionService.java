@@ -164,7 +164,9 @@ public class TransactionService {
                 () -> new ResourceNotFoundException("User not found")
         );
 
-        Account account = accountRepository.findById(accountId).orElseThrow();
+        Account account = accountRepository.findById(accountId).orElseThrow(
+                () -> new ResourceNotFoundException("Account not found")
+        );
         if (!account.getOwner().getId().equals(user.getId())) {
             throw new UnauthorizedException("You do not own this account");
         }
