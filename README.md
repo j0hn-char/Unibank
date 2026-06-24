@@ -2,7 +2,7 @@
 
 # UniBank
 
-**A secure, production-structured REST API for core banking operations**
+**A secure, production-structured banking system with a REST API backend**
 
 Built with Spring Boot 3 · Java 21 · JWT · MySQL
 
@@ -18,7 +18,7 @@ Built with Spring Boot 3 · Java 21 · JWT · MySQL
 
 ## About
 
-UniBank is a RESTful banking API that simulates core banking functionality: account management, fund transfers, and loan processing, with a focus on clean architecture and security best practices.
+UniBank is a banking system that simulates core banking functionality: account management, fund transfers, and loan processing, with a focus on clean architecture and security best practices.
 
 **Highlights:**
 - Stateless JWT authentication with Spring Security
@@ -74,7 +74,7 @@ UniBank is a RESTful banking API that simulates core banking functionality: acco
    The API will be available at `http://localhost:8080`.
 
 
-## API Reference
+## REST API Reference
 
 All endpoints except `/api/auth/**` require a `Bearer` JWT token in the `Authorization` header.
 
