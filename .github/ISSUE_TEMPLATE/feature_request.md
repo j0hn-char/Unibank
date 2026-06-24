@@ -1,27 +1,23 @@
 ---
 name: Feature Request
-about: Suggest an idea or improvement
+about: Suggest a new feature or improvement
 title: '[FEATURE] '
 labels: enhancement
 assignees: ''
 ---
 
-## Summary
+## Problem
 
-A clear and concise description of the feature you'd like to see.
-
-## Problem / Motivation
-
-What problem does this solve? Why is it needed?
+What problem are you trying to solve? Describe it clearly. A good feature request starts with the problem, not the solution.
 
 ## Proposed Solution
 
-Describe how you'd like it to work. Include example endpoints, request/response shapes, or any relevant details.
+How would you like this to work? Include example endpoints, request/response shapes, or any other relevant detail.
 
 ## Alternatives Considered
 
-Have you considered any other approaches? Why do you prefer this one?
+Have you thought about other approaches? Why do you prefer the one above?
 
 ## Additional Context
 
-Add any other context, links, or references here.
+Links, references, screenshots, or anything else that supports the request.

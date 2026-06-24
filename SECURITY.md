@@ -2,30 +2,42 @@
 
 ## Supported Versions
 
-This is a personal portfolio project. Only the latest commit on `main` is actively maintained.
+UniBank is a personal portfolio project. Only the latest commit on `main` is actively maintained.
 
 | Version | Supported |
 |---------|-----------|
-| latest (main) | ✅ |
-| older commits | ❌ |
+| latest (main) | Yes |
+| older commits | No |
 
 ## Reporting a Vulnerability
 
-**Please do not open a public issue for security vulnerabilities.**
+Please do not report security vulnerabilities through public GitHub issues.
 
-If you discover a security issue in UniBank, please report it privately:
+If you discover a security vulnerability, report it privately through GitHub's built-in advisory tool:
 
-1. Go to the [Security tab](https://github.com/j0hn-char/UniBank/security) of this repository.
-2. Click **"Report a vulnerability"** to open a private advisory.
-3. Describe the vulnerability, steps to reproduce, and potential impact.
+1. Go to the [Security tab](https://github.com/j0hn-char/UniBank/security) of this repository
+2. Click **"Report a vulnerability"** to open a private security advisory
+3. Include as much of the following as you can:
+    - A description of the vulnerability and its potential impact
+    - Steps to reproduce or proof-of-concept
+    - The affected component (e.g. JWT handling, authentication, a specific endpoint)
+    - Any suggested fix if you have one
 
-I'll do my best to respond within a few days and will keep you updated on the fix.
+## What to Expect
+
+After you submit a report:
+
+- You will receive an acknowledgement within 48 hours
+- I will investigate and keep you updated on progress
+- If the vulnerability is confirmed, a fix will be prioritised and you will be credited if you wish
 
 ## Security Notes
 
 This project uses:
-- **JWT** for stateless authentication (jjwt 0.12.5)
-- **Spring Security** for endpoint protection and password encoding
-- **Input validation** via Spring Validation
 
-> ⚠️ This project is intended for educational/portfolio purposes. Do **not** deploy it in production without a thorough security review.
+- JWT (jjwt 0.12.5) for stateless authentication
+- Spring Security for endpoint protection and password encoding
+- Spring Validation for input sanitization
+- Custom exception handling to avoid leaking internal details in error responses
+
+> This project is intended for educational and portfolio purposes. Do not deploy it in a production environment without a thorough independent security review.

@@ -1,44 +1,65 @@
 # Contributing to UniBank
 
-Thanks for your interest! UniBank is a personal portfolio project, so contributions are welcome in the form of bug reports, suggestions, and small fixes.
+UniBank is a personal portfolio project and contributions are welcome in the form of bug reports, feature suggestions, and small fixes. This document explains how to contribute effectively.
 
-## How to Contribute
+## Ways to Contribute
 
-### Reporting Bugs
+- Reporting a bug
+- Discussing the current state of the code
+- Submitting a fix
+- Proposing a new feature
 
-Please [open an issue](https://github.com/j0hn-char/UniBank/issues/new?template=bug_report.md) and include:
-- A clear description of the problem
-- Steps to reproduce
-- Expected vs. actual behavior
-- Your Java and MySQL version
+## Reporting Bugs
 
-### Suggesting Features
+Good bug reports are specific and reproducible. Before opening one, check that the issue hasn't already been reported.
 
-[Open a feature request](https://github.com/j0hn-char/UniBank/issues/new?template=feature_request.md) describing what you'd like to see and why it would be useful.
+A good bug report includes:
 
-### Submitting Pull Requests
+- A clear summary of the problem
+- Steps to reproduce it (be specific)
+- What you expected to happen
+- What actually happened, including any error messages or stack traces
+- Your environment: Java version, MySQL version, OS
 
-1. Fork the repository and create a branch from `main`:
+[Open a bug report](https://github.com/j0hn-char/UniBank/issues/new?template=bug_report.md)
+
+## Suggesting Features
+
+Feature requests are welcome. Please describe the problem you want to solve, not just the solution, so we can discuss the best approach.
+
+[Open a feature request](https://github.com/j0hn-char/UniBank/issues/new?template=feature_request.md)
+
+## Submitting a Pull Request
+
+All code changes happen through pull requests. To submit one:
+
+1. Fork the repo and create a branch from `main`:
    ```bash
+   git checkout -b fix/your-fix-name
+   # or
    git checkout -b feature/your-feature-name
    ```
 
-2. Make your changes, keeping them focused and minimal.
+2. Make your changes. Keep them focused — one fix or feature per PR.
 
-3. Ensure the project builds and tests pass:
+3. If you've changed or added API endpoints, update the README accordingly.
+
+4. Make sure the project builds and all tests pass:
    ```bash
    ./mvnw clean verify
    ```
 
-4. Open a pull request against `main` with a clear description of what you changed and why.
+5. Open a pull request against `main` with a clear description of what changed and why.
+
+Any contributions you make will be understood to be under the same [MIT License](LICENSE) that covers the project.
 
 ## Code Style
 
-- Follow standard Java conventions
-- Use Lombok annotations where appropriate to reduce boilerplate
-- Keep controllers thin — business logic belongs in the service layer
-- Write meaningful commit messages
+- Follow standard Java naming conventions
+- Keep controllers thin; business logic belongs in the service layer
+- Use Lombok annotations to reduce boilerplate where appropriate
+- Use specific, meaningful commit messages
 
-## Questions?
+## Questions
 
-Feel free to open an issue if you have any questions about the codebase.
+If you have a question about the codebase, feel free to open an issue with the label `question`.
