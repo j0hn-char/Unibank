@@ -14,7 +14,6 @@ import com.unibank.bankingSystem.repository.TransactionRepository;
 import com.unibank.bankingSystem.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
