@@ -1,6 +1,6 @@
 # Contributing to UniBank
 
-UniBank is a personal portfolio project and contributions are welcome in the form of bug reports, feature suggestions, and small fixes. This document explains how to contribute effectively.
+UniBank is a personal portfolio banking system and contributions are welcome in the form of bug reports, feature suggestions, and small fixes. This document explains how to contribute effectively.
 
 ## Ways to Contribute
 
