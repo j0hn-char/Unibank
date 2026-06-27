@@ -3,6 +3,7 @@ import AuthPage from '@/pages/AuthPage'
 import ProtectedRoute from "@/components/ProtectedRoute.tsx";
 import Dashboard from "@/pages/Dashboard.tsx";
 import AccountsPage from "@/pages/AccountsPage.tsx";
+import AccountDetailsPage from "@/pages/AccountDetailsPage.tsx";
 
 function App() {
   return (
@@ -22,6 +23,14 @@ function App() {
               <ProtectedRoute>
                   <AccountsPage />
               </ProtectedRoute>
+              }
+          />
+          <Route
+              path="/accounts/:id"
+              element={
+                  <ProtectedRoute>
+                      <AccountDetailsPage />
+                  </ProtectedRoute>
               }
           />
           <Route path="*" element={<Navigate to="/login" />} />

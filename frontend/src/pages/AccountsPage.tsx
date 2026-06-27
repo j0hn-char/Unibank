@@ -54,6 +54,12 @@ export default function AccountsPage() {
         fetchAccounts()
     }, [])
 
+    const sortedAccounts = [...accounts].sort((a, b) => {
+        if (a.status === 'CLOSED' && b.status !== 'CLOSED') return 1
+        if (a.status !== 'CLOSED' && b.status === 'CLOSED') return -1
+        return 0
+    })
+
     return (
         <div className="min-h-screen p-8">
             <h1 className="text-2xl font-bold mb-6">My Accounts</h1>
@@ -108,20 +114,23 @@ export default function AccountsPage() {
                 <p className="text-gray-500">You don't have any accounts yet.</p>
             ) : (
                 <div className="grid gap-4">
-                    {accounts.map((account) => (
+                    {sortedAccounts.map((account) => (
                         <Card
                             key={account.id}
                             onClick={() => navigate(`/accounts/${account.id}`)}
-                            className="cursor-pointer hover:shadow-md transition-shadow"
+                            className={`cursor-pointer hover:shadow-md transition-shadow ${
+                                account.status === 'CLOSED' ? 'opacity-50' : ''
+                            }`}
                         >
                             <CardHeader>
                                 <CardTitle>{account.nickname}</CardTitle>
-                                <p className="text-sm text-gray-500">{account.type}</p>
+                                <p className={`text-sm ${account.status === 'CLOSED' ? 'text-red-500' : 'text-green-600'}`}>
+                                    {account.status}
+                                </p>
                             </CardHeader>
                             <CardContent>
                                 <p className="text-sm text-gray-500">{account.accountNumber}</p>
                                 <p className="text-2xl font-bold">{account.balance.toFixed(2)}€</p>
-                                <p className="text-sm">{account.status}</p>
                             </CardContent>
                         </Card>
                     ))}
