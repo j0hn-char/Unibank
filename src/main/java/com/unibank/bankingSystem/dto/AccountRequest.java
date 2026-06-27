@@ -8,4 +8,5 @@ import lombok.Setter;
 @Setter
 public class AccountRequest {
     private AccountType type;
+    private String nickname;
 }

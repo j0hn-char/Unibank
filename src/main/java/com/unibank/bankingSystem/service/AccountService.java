@@ -2,6 +2,7 @@ package com.unibank.bankingSystem.service;
 
 import com.unibank.bankingSystem.dto.AccountRequest;
 import com.unibank.bankingSystem.dto.AccountResponse;
+import com.unibank.bankingSystem.exception.BadRequestException;
 import com.unibank.bankingSystem.exception.ResourceNotFoundException;
 import com.unibank.bankingSystem.exception.UnauthorizedException;
 import com.unibank.bankingSystem.model.Account;
@@ -35,9 +36,15 @@ public class AccountService {
             accountNumber = "UNI" + System.currentTimeMillis() + (int)(Math.random() * 1000);
         } while (accountRepository.existsByAccountNumber(accountNumber));
 
+        String accountNickname = request.getNickname();
+        if(accountNickname == null || accountNickname.isBlank()) {
+            accountNickname = request.getType().toString() + " ••" + accountNumber.substring(accountNumber.length() - 4);
+        }
+
         Account account = new Account();
         account.setOwner(user);
         account.setAccountNumber(accountNumber);
+        account.setNickname(accountNickname);
         account.setBalance(BigDecimal.ZERO);
         account.setType(request.getType());
         account.setStatus(AccountStatus.ACTIVE);
@@ -47,6 +54,7 @@ public class AccountService {
         return new AccountResponse(
                 account.getId(),
                 account.getAccountNumber(),
+                account.getNickname(),
                 account.getType(),
                 account.getBalance(),
                 account.getStatus()
@@ -69,7 +77,7 @@ public class AccountService {
         }
 
         if (account.getBalance().compareTo(BigDecimal.ZERO) != 0) {
-            throw new RuntimeException("Account balance must be zero before closing");
+            throw new BadRequestException("Account balance must be zero before closing");
         }
 
         account.setStatus(AccountStatus.CLOSED);
@@ -78,6 +86,7 @@ public class AccountService {
         return new AccountResponse(
                 account.getId(),
                 account.getAccountNumber(),
+                account.getNickname(),
                 account.getType(),
                 account.getBalance(),
                 account.getStatus()
@@ -96,6 +105,7 @@ public class AccountService {
                 .map(account -> new AccountResponse(
                         account.getId(),
                         account.getAccountNumber(),
+                        account.getNickname(),
                         account.getType(),
                         account.getBalance(),
                         account.getStatus()
@@ -120,6 +130,7 @@ public class AccountService {
         return new AccountResponse(
                 account.getId(),
                 account.getAccountNumber(),
+                account.getNickname(),
                 account.getType(),
                 account.getBalance(),
                 account.getStatus()

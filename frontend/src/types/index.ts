@@ -24,6 +24,7 @@ export interface DecodedToken {
 export interface AccountResponse {
     id: number
     accountNumber: string
+    nickname: string
     type: AccountType
     balance: number
     status: AccountStatus

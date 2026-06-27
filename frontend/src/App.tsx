@@ -2,6 +2,7 @@ import { Routes, Route, Navigate } from 'react-router-dom'
 import AuthPage from '@/pages/AuthPage'
 import ProtectedRoute from "@/components/ProtectedRoute.tsx";
 import Dashboard from "@/pages/Dashboard.tsx";
+import AccountsPage from "@/pages/AccountsPage.tsx";
 
 function App() {
   return (
@@ -12,6 +13,14 @@ function App() {
               element={
               <ProtectedRoute>
                   <Dashboard />
+              </ProtectedRoute>
+              }
+          />
+          <Route
+              path="/accounts"
+              element={
+              <ProtectedRoute>
+                  <AccountsPage />
               </ProtectedRoute>
               }
           />

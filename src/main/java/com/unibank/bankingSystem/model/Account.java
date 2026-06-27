@@ -26,6 +26,9 @@ public class Account {
     @Column(nullable = false)
     private BigDecimal balance;
 
+    @Column(nullable = false)
+    private String nickname;
+
     @OneToMany(mappedBy = "account")
     private List<Transaction> transactions;
 
