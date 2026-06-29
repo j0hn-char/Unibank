@@ -5,6 +5,7 @@ import Dashboard from "@/pages/Dashboard.tsx";
 import AccountsPage from "@/pages/AccountsPage.tsx";
 import AccountDetailsPage from "@/pages/AccountDetailsPage.tsx";
 import Layout from "@/components/Layout.tsx";
+import TransactionsPage from "@/pages/TransactionsPage.tsx";
 
 function App() {
   return (
@@ -32,6 +33,14 @@ function App() {
                   element={
                       <ProtectedRoute>
                           <AccountDetailsPage />
+                      </ProtectedRoute>
+                  }
+              />
+              <Route
+                  path="/transactions"
+                  element={
+                      <ProtectedRoute>
+                          <TransactionsPage />
                       </ProtectedRoute>
                   }
               />

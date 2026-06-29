@@ -3,13 +3,11 @@ package com.unibank.bankingSystem.service;
 import com.unibank.bankingSystem.dto.TransactionRequest;
 import com.unibank.bankingSystem.dto.TransactionResponse;
 import com.unibank.bankingSystem.dto.TransferRequest;
+import com.unibank.bankingSystem.exception.BadRequestException;
 import com.unibank.bankingSystem.exception.InsufficientFundsException;
 import com.unibank.bankingSystem.exception.ResourceNotFoundException;
 import com.unibank.bankingSystem.exception.UnauthorizedException;
-import com.unibank.bankingSystem.model.Account;
-import com.unibank.bankingSystem.model.TransType;
-import com.unibank.bankingSystem.model.Transaction;
-import com.unibank.bankingSystem.model.User;
+import com.unibank.bankingSystem.model.*;
 import com.unibank.bankingSystem.repository.AccountRepository;
 import com.unibank.bankingSystem.repository.TransactionRepository;
 import com.unibank.bankingSystem.repository.UserRepository;
@@ -121,9 +119,17 @@ public class TransactionService {
             throw new InsufficientFundsException("Insufficient funds");
         }
 
-        Account toAccount = accountRepository.findById(request.getToAccountId()).orElseThrow(
+        Account toAccount = accountRepository.findByAccountNumber(request.getToAccountNumber()).orElseThrow(
                 () -> new ResourceNotFoundException("Account not found")
         );
+
+        if(fromAccount.getId().equals(toAccount.getId())) {
+            throw new BadRequestException("The from-account can not be the same as the to-account");
+        }
+
+        if(toAccount.getStatus() != AccountStatus.ACTIVE) {
+            throw new BadRequestException("You can not make a transfer to a frozen/closed account");
+        }
 
         fromAccount.setBalance(fromAccount.getBalance().subtract(request.getAmount()));
         toAccount.setBalance(toAccount.getBalance().add(request.getAmount()));

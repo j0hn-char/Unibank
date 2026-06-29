@@ -11,6 +11,7 @@ import {
     AlertDialogTrigger
 } from "@/components/ui/alert-dialog.tsx";
 import {Button} from "@/components/ui/button.tsx";
+import PageContainer from "@/components/PageContainer.tsx";
 
 export default function AccountDetailsPage() {
     const [ account, setAccount ] = useState<AccountResponse | null>(null)
@@ -47,7 +48,7 @@ export default function AccountDetailsPage() {
     }, [id])
 
     return (
-        <div className="min-h-screen p-8">
+        <PageContainer>
             {loading ? (
                 <p>Loading...</p>
             ) : !account ? (
@@ -87,6 +88,6 @@ export default function AccountDetailsPage() {
                     </CardContent>
                 </Card>
             )}
-        </div>
+        </PageContainer>
     )
 }

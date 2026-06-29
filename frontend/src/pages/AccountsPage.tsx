@@ -15,6 +15,7 @@ import {
 } from "@/components/ui/dialog.tsx";
 import {Input} from "@/components/ui/input.tsx";
 import {useNavigate} from "react-router-dom";
+import PageContainer from "@/components/PageContainer.tsx";
 
 export default function AccountsPage() {
     const [ accounts, setAccounts ] = useState<AccountResponse[]>([])
@@ -61,7 +62,7 @@ export default function AccountsPage() {
     })
 
     return (
-        <div className="min-h-screen p-8">
+        <PageContainer>
             <h1 className="text-2xl font-bold mb-6">My Accounts</h1>
 
             <div className="mb-6">
@@ -136,6 +137,6 @@ export default function AccountsPage() {
                     ))}
                 </div>
             )}
-        </div>
+        </PageContainer>
     )
 }
