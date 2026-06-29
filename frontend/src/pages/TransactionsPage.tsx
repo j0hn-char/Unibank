@@ -108,155 +108,159 @@ export default function TransactionsPage() {
 
     return (
         <PageContainer>
-            <Tabs defaultValue="deposit" className="max-w-md">
-                <TabsList>
-                    <TabsTrigger value="deposit">Deposit</TabsTrigger>
-                    <TabsTrigger value="withdraw">Withdraw</TabsTrigger>
-                    <TabsTrigger value="transfer">Transfer</TabsTrigger>
-                </TabsList>
+            {loading ? (
+                <p>Loading...</p>
+            ) : (
+                <Tabs defaultValue="deposit" className="max-w-md">
+                    <TabsList>
+                        <TabsTrigger value="deposit">Deposit</TabsTrigger>
+                        <TabsTrigger value="withdraw">Withdraw</TabsTrigger>
+                        <TabsTrigger value="transfer">Transfer</TabsTrigger>
+                    </TabsList>
 
-                <TabsContent value="deposit" className="space-y-4">
-                    <div className="space-y-2">
-                        <Label>Account</Label>
-                        <Select value={depositAccountId} onValueChange={setDepositAccountId}>
-                            <SelectTrigger>
-                                <SelectValue placeholder="Select an account" />
-                            </SelectTrigger>
-                            <SelectContent>
-                                {activeAccounts.map((account) => (
-                                    <SelectItem key={account.id} value={String(account.id)}>
-                                        {account.nickname} — {account.balance.toFixed(2)}€
-                                    </SelectItem>
-                                ))}
-                            </SelectContent>
-                        </Select>
-                    </div>
+                    <TabsContent value="deposit" className="space-y-4">
+                        <div className="space-y-2">
+                            <Label>Account</Label>
+                            <Select value={depositAccountId} onValueChange={setDepositAccountId}>
+                                <SelectTrigger>
+                                    <SelectValue placeholder="Select an account" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    {activeAccounts.map((account) => (
+                                        <SelectItem key={account.id} value={String(account.id)}>
+                                            {account.nickname} — {account.balance.toFixed(2)}€
+                                        </SelectItem>
+                                    ))}
+                                </SelectContent>
+                            </Select>
+                        </div>
 
-                    <div className="space-y-2">
-                        <Label htmlFor="deposit-amount">Amount (€)</Label>
-                        <Input
-                            type="number"
-                            id="deposit-amount"
-                            placeholder="0.0€"
-                            value={depositAmount}
-                            onChange={(e) => setDepositAmount(e.target.value)}
-                        />
-                    </div>
+                        <div className="space-y-2">
+                            <Label htmlFor="deposit-amount">Amount (€)</Label>
+                            <Input
+                                type="number"
+                                id="deposit-amount"
+                                placeholder="0.0€"
+                                value={depositAmount}
+                                onChange={(e) => setDepositAmount(e.target.value)}
+                            />
+                        </div>
 
-                    <div className="space-y-2">
-                        <Label htmlFor="deposit-description">Description (optional)</Label>
-                        <Input
-                            id="deposit-description"
-                            placeholder="e.g. Birthday gift"
-                            value={depositDescription}
-                            onChange={(e) => setDepositDescription(e.target.value)}
-                        />
-                    </div>
+                        <div className="space-y-2">
+                            <Label htmlFor="deposit-description">Description (optional)</Label>
+                            <Input
+                                id="deposit-description"
+                                placeholder="e.g. Birthday gift"
+                                value={depositDescription}
+                                onChange={(e) => setDepositDescription(e.target.value)}
+                            />
+                        </div>
 
-                    <Button onClick={handleDeposit} disabled={submitting}>
-                        {submitting ? 'Depositing...' : 'Make deposit'}
-                    </Button>
-                </TabsContent>
+                        <Button onClick={handleDeposit} disabled={submitting}>
+                            {submitting ? 'Depositing...' : 'Make deposit'}
+                        </Button>
+                    </TabsContent>
 
-                <TabsContent value="withdraw" className="space-y-4">
-                    <div className="space-y-2">
-                        <Label>Account</Label>
-                        <Select value={withdrawAccountId} onValueChange={setWithdrawAccountId}>
-                            <SelectTrigger>
-                                <SelectValue placeholder="Select an account" />
-                            </SelectTrigger>
-                            <SelectContent>
-                                {activeAccounts.map((account) => (
-                                    <SelectItem key={account.id} value={String(account.id)}>
-                                        {account.nickname} — {account.balance.toFixed(2)}€
-                                    </SelectItem>
-                                ))}
-                            </SelectContent>
-                        </Select>
-                    </div>
+                    <TabsContent value="withdraw" className="space-y-4">
+                        <div className="space-y-2">
+                            <Label>Account</Label>
+                            <Select value={withdrawAccountId} onValueChange={setWithdrawAccountId}>
+                                <SelectTrigger>
+                                    <SelectValue placeholder="Select an account" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    {activeAccounts.map((account) => (
+                                        <SelectItem key={account.id} value={String(account.id)}>
+                                            {account.nickname} — {account.balance.toFixed(2)}€
+                                        </SelectItem>
+                                    ))}
+                                </SelectContent>
+                            </Select>
+                        </div>
 
-                    <div className="space-y-2">
-                        <Label htmlFor="withdraw-amount">Amount (€)</Label>
-                        <Input
-                            type="number"
-                            id="withdraw-amount"
-                            placeholder="0.0€"
-                            value={withdrawAmount}
-                            onChange={(e) => setWithdrawAmount(e.target.value)}
-                        />
-                    </div>
+                        <div className="space-y-2">
+                            <Label htmlFor="withdraw-amount">Amount (€)</Label>
+                            <Input
+                                type="number"
+                                id="withdraw-amount"
+                                placeholder="0.0€"
+                                value={withdrawAmount}
+                                onChange={(e) => setWithdrawAmount(e.target.value)}
+                            />
+                        </div>
 
-                    <div className="space-y-2">
-                        <Label htmlFor="withdraw-description">Description (optional)</Label>
-                        <Input
-                            id="withdraw-description"
-                            placeholder="e.g. Birthday gift"
-                            value={withdrawDescription}
-                            onChange={(e) => setWithdrawDescription(e.target.value)}
-                        />
-                    </div>
+                        <div className="space-y-2">
+                            <Label htmlFor="withdraw-description">Description (optional)</Label>
+                            <Input
+                                id="withdraw-description"
+                                placeholder="e.g. Birthday gift"
+                                value={withdrawDescription}
+                                onChange={(e) => setWithdrawDescription(e.target.value)}
+                            />
+                        </div>
 
-                    {withdrawError && <p className="text-sm text-red-500">{withdrawError}</p>}
+                        {withdrawError && <p className="text-sm text-red-500">{withdrawError}</p>}
 
-                    <Button onClick={handleWithdraw} disabled={submitting}>
-                        {submitting ? 'Withdrawing...' : 'Make withdrawal'}
-                    </Button>
-                </TabsContent>
-                <TabsContent value="transfer" className="space-y-4">
-                    <div className="space-y-2">
-                        <Label>From account</Label>
-                        <Select value={transferFromId} onValueChange={setTransferFromId}>
-                            <SelectTrigger>
-                                <SelectValue placeholder="Select an account" />
-                            </SelectTrigger>
-                            <SelectContent>
-                                {activeAccounts.map((account) => (
-                                    <SelectItem key={account.id} value={String(account.id)}>
-                                        {account.nickname} — {account.balance.toFixed(2)}€
-                                    </SelectItem>
-                                ))}
-                            </SelectContent>
-                        </Select>
-                    </div>
+                        <Button onClick={handleWithdraw} disabled={submitting}>
+                            {submitting ? 'Withdrawing...' : 'Make withdrawal'}
+                        </Button>
+                    </TabsContent>
+                    <TabsContent value="transfer" className="space-y-4">
+                        <div className="space-y-2">
+                            <Label>From account</Label>
+                            <Select value={transferFromId} onValueChange={setTransferFromId}>
+                                <SelectTrigger>
+                                    <SelectValue placeholder="Select an account" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    {activeAccounts.map((account) => (
+                                        <SelectItem key={account.id} value={String(account.id)}>
+                                            {account.nickname} — {account.balance.toFixed(2)}€
+                                        </SelectItem>
+                                    ))}
+                                </SelectContent>
+                            </Select>
+                        </div>
 
-                    <div className="space-y-2">
-                        <Label htmlFor="to-account">To-account number</Label>
-                        <Input
-                            id="to-account"
-                            placeholder="UNI..."
-                            value={transferToNumber}
-                            onChange={(e) => setTransferToNumber(e.target.value)}
-                        />
-                    </div>
+                        <div className="space-y-2">
+                            <Label htmlFor="to-account">To-account number</Label>
+                            <Input
+                                id="to-account"
+                                placeholder="UNI..."
+                                value={transferToNumber}
+                                onChange={(e) => setTransferToNumber(e.target.value)}
+                            />
+                        </div>
 
-                    <div className="space-y-2">
-                        <Label htmlFor="transfer-amount">Amount (€)</Label>
-                        <Input
-                            type="number"
-                            id="transfer-amount"
-                            placeholder="0.0€"
-                            value={transferAmount}
-                            onChange={(e) => setTransferAmount(e.target.value)}
-                        />
-                    </div>
+                        <div className="space-y-2">
+                            <Label htmlFor="transfer-amount">Amount (€)</Label>
+                            <Input
+                                type="number"
+                                id="transfer-amount"
+                                placeholder="0.0€"
+                                value={transferAmount}
+                                onChange={(e) => setTransferAmount(e.target.value)}
+                            />
+                        </div>
 
-                    <div className="space-y-2">
-                        <Label htmlFor="transfer-description">Description (optional)</Label>
-                        <Input
-                            id="transfer-description"
-                            placeholder="e.g. Ticket money"
-                            value={transferDescription}
-                            onChange={(e) => setTransferDescription(e.target.value)}
-                        />
-                    </div>
+                        <div className="space-y-2">
+                            <Label htmlFor="transfer-description">Description (optional)</Label>
+                            <Input
+                                id="transfer-description"
+                                placeholder="e.g. Ticket money"
+                                value={transferDescription}
+                                onChange={(e) => setTransferDescription(e.target.value)}
+                            />
+                        </div>
 
-                    {transferError && <p className="text-sm text-red-500">{transferError}</p>}
+                        {transferError && <p className="text-sm text-red-500">{transferError}</p>}
 
-                    <Button onClick={handleTransfer} disabled={submitting}>
-                        {submitting ? 'Transferring...' : 'Make transfer'}
-                    </Button>
-                </TabsContent>
-            </Tabs>
+                        <Button onClick={handleTransfer} disabled={submitting}>
+                            {submitting ? 'Transferring...' : 'Make transfer'}
+                        </Button>
+                    </TabsContent>
+                </Tabs>
+            )}
         </PageContainer>
     )
 }
