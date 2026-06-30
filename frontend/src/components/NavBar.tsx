@@ -24,6 +24,7 @@ export default function NavBar() {
                     <NavLink to="/dashboard" className={linkClass}>Dashboard</NavLink>
                     <NavLink to="/accounts" className={linkClass}>Accounts</NavLink>
                     <NavLink to="/transactions" className={linkClass}>Transactions</NavLink>
+                    <NavLink to="/loans" className={linkClass}>Loans</NavLink>
                 </div>
 
                 <div className="flex items-center gap-4">

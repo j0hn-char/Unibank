@@ -1,0 +1,182 @@
+import {useEffect, useState} from "react";
+import type {AccountResponse, LoanResponse} from "@/types";
+import api from "@/api/axios.ts";
+import PageContainer from "@/components/PageContainer.tsx";
+import {Card, CardContent, CardHeader, CardTitle} from "@/components/ui/card.tsx";
+import {
+    Dialog,
+    DialogContent,
+    DialogFooter,
+    DialogHeader,
+    DialogTitle,
+    DialogTrigger
+} from "@/components/ui/dialog.tsx";
+import {Button} from "@/components/ui/button.tsx";
+import {Label} from "@/components/ui/label.tsx";
+import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from "@/components/ui/select.tsx";
+import {Input} from "@/components/ui/input.tsx";
+
+export default function LoansPage() {
+    const [ loans, setLoans ] = useState<LoanResponse[]>([]);
+    const [ loading, setLoading ] = useState(true)
+    const [ accounts, setAccounts ] = useState<AccountResponse[]>([])
+    const [ dialogOpen, setDialogOpen ] = useState(false)
+    const [ applyAmount, setApplyAmount ] = useState('')
+    const [ applyTermMonths, setApplyTermMonths ] = useState('')
+    const [ applyPurpose, setApplyPurpose ] = useState('')
+    const [ applyAccountId, setApplyAccountId ] = useState('')
+    const [ submitting, setSubmitting ] = useState(false)
+    const [ applyError, setApplyError ] = useState('')
+
+    async function fetchLoans() {
+        try {
+            const response = await api.get<LoanResponse[]>('/loans')
+            setLoans(response.data)
+        } catch (err) {
+            console.error(err)
+        } finally {
+            setLoading(false)
+        }
+    }
+
+    async function fetchAccounts() {
+        try {
+            const response = await api.get<AccountResponse[]>('/accounts')
+            setAccounts(response.data)
+        } catch (err) {
+            console.error(err)
+        } finally {
+            setLoading(false)
+        }
+    }
+
+    async function handleApply() {
+        setSubmitting(true)
+        setApplyError('')
+        try {
+            const body = {
+                amount: Number(applyAmount),
+                termMonths: Number(applyTermMonths),
+                purpose: applyPurpose,
+                accountId: Number(applyAccountId)
+            }
+            await api.post<LoanResponse>('/loans', body)
+            setDialogOpen(false)
+            setApplyAmount('')
+            setApplyTermMonths('')
+            setApplyPurpose('')
+            setApplyAccountId('')
+            await fetchLoans()
+        } catch (err: any) {
+            setApplyError(err.response?.data?.message ?? 'Loan application failed')
+        } finally {
+            setSubmitting(false)
+        }
+    }
+
+    useEffect(() => {
+        fetchLoans()
+        fetchAccounts()
+    }, [])
+
+    const activeAccounts = accounts.filter((a) => a.status === 'ACTIVE')
+
+    return (
+        <PageContainer>
+            <h1 className="text-2xl font-bold mb-6">My Loans</h1>
+            <div className="mb-6">
+                <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
+                    <DialogTrigger asChild>
+                        <Button>Loan application</Button>
+                    </DialogTrigger>
+                    <DialogContent>
+                        <DialogHeader>
+                            <DialogTitle>Apply for a loan</DialogTitle>
+                        </DialogHeader>
+
+                        <div className="space-y-4 py-2">
+                            <div className="space-y-2">
+                                <Label>Account</Label>
+                                <Select value={applyAccountId} onValueChange={setApplyAccountId}>
+                                    <SelectTrigger>
+                                        <SelectValue placeholder="Select the account for your loan" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        {activeAccounts.map((account) => (
+                                            <SelectItem key={account.id} value={String(account.id)}>
+                                                {account.nickname} — {account.balance.toFixed(2)}€
+                                            </SelectItem>
+                                        ))}
+                                    </SelectContent>
+                                </Select>
+                            </div>
+
+                            <div className="space-y-2">
+                                <Label htmlFor="loan-amount">Loan amount</Label>
+                                <Input
+                                    type="number"
+                                    id="loan-amount"
+                                    placeholder="0.0€"
+                                    value={applyAmount}
+                                    onChange={(e) => setApplyAmount(e.target.value)}
+                                />
+                            </div>
+
+                            <div className="space-y-2">
+                                <Label htmlFor="term-months">Loan term (months)</Label>
+                                <Input
+                                    type="number"
+                                    id="term-months"
+                                    placeholder="e.g. 6 months"
+                                    value={applyTermMonths}
+                                    onChange={(e) => setApplyTermMonths(e.target.value)}
+                                />
+                            </div>
+
+                            <div className="space-y-2">
+                                <Label htmlFor="loan-purpose">Purpose for the loan</Label>
+                                <Input
+                                    id="loan-purpose"
+                                    placeholder="e.g. Buying a house"
+                                    value={applyPurpose}
+                                    onChange={(e) => setApplyPurpose(e.target.value)}
+                                />
+                            </div>
+                        </div>
+
+                        {applyError && <p className="text-sm text-red-500">{applyError}</p>}
+
+                        <DialogFooter>
+                            <Button onClick={handleApply} disabled={submitting}>
+                                {submitting ? 'Applying...' : 'Apply'}
+                            </Button>
+                        </DialogFooter>
+                    </DialogContent>
+                </Dialog>
+            </div>
+            {loading ? (
+                <p>Loading...</p>
+            ) : loans.length === 0 ? (
+                <p className="text-muted-foreground">You have no loans.</p>
+            ) : (
+                <div className="grid gap-4">
+                    {loans.map((loan) => (
+                        <Card key={loan.id} className="max-w-lg">
+                            <CardHeader>
+                                <CardTitle>{loan.purpose}</CardTitle>
+                                <p className="text-sm text-muted-foreground">{loan.status}</p>
+                            </CardHeader>
+                            <CardContent className="space-y-1 text-sm">
+                                <p>Principal: {loan.principalAmount.toFixed(2)}€</p>
+                                <p>Remaining: {loan.remainingBalance.toFixed(2)}€</p>
+                                <p>Monthly payment: {loan.monthlyPayment.toFixed(2)}€</p>
+                                <p>Term: {loan.termMonths} months</p>
+                                <p>Interest rate: {loan.interestRate}%</p>
+                            </CardContent>
+                        </Card>
+                    ))}
+                </div>
+            )}
+        </PageContainer>
+    )
+}
